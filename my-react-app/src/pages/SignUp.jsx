@@ -14,7 +14,7 @@ export default function Signup() {
     village: "",
     district: "",
     state: "",
-    role: "citizen" // 🔒 fixed role
+    role: "citizen" 
   });
 
   const [loading, setLoading] = useState(false);
