@@ -16,7 +16,7 @@ export default function Navbar() {
 
         {/* LOGO */}
         <Link className="navbar-brand fw-bold" to="/">
-          🌾 RuralConnect
+          🌾 DigitalConnect
         </Link>
 
         {/* MOBILE TOGGLE */}
