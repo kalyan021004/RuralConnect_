@@ -13,3 +13,6 @@ export const getSchemeById = (id) => {
 /* Apply for scheme */
 export const applyScheme = (schemeId) =>
   api.post("/applications/apply", { schemeId });
+
+
+/*Eligibility fro schmes*/

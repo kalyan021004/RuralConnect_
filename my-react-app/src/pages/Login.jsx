@@ -15,7 +15,9 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const submit = async () => {
+  // 👇 IMPORTANT: receive event
+  const submit = async (e) => {
+    e.preventDefault(); // ✅ stops page reload
     setError("");
 
     if (!form.email || !form.password) {
@@ -25,17 +27,13 @@ export default function Login() {
 
     try {
       setLoading(true);
-
-      const data = await login(form);
-
-      /* ✅ role is validated by backend */
-      navigate(`/`);
+      await login(form);
+      navigate("/");
     } catch (err) {
       const msg =
         err.response?.data?.error ||
         "Login failed. Please try again.";
 
-      // 🔐 Friendly authorization message
       if (
         msg.toLowerCase().includes("not authorized") ||
         msg.toLowerCase().includes("unauthorized")
@@ -58,9 +56,7 @@ export default function Login() {
         {/* HEADER */}
         <div className="text-center mb-4">
           <h2 className="page-title">Login</h2>
-          <p className="page-subtitle">
-            Access DigitalConnect services
-          </p>
+          <p className="page-subtitle">Access DigitalConnect services</p>
         </div>
 
         {/* ERROR */}
@@ -70,68 +66,72 @@ export default function Login() {
           </div>
         )}
 
-        {/* EMAIL */}
-        <div className="mb-3">
-          <label className="form-label">Email</label>
-          <input
-            type="email"
-            className="form-control"
-            placeholder="Enter your email"
-            value={form.email}
-            onChange={e =>
-              setForm({ ...form, email: e.target.value })
-            }
-          />
-        </div>
+        {/* ✅ FORM START */}
+        <form onSubmit={submit}>
+          {/* EMAIL */}
+          <div className="mb-3">
+            <label className="form-label">Email</label>
+            <input
+              type="email"
+              className="form-control"
+              placeholder="Enter your email"
+              value={form.email}
+              onChange={e =>
+                setForm({ ...form, email: e.target.value })
+              }
+            />
+          </div>
 
-        {/* PASSWORD */}
-        <div className="mb-3">
-          <label className="form-label">Password</label>
-          <input
-            type="password"
-            className="form-control"
-            placeholder="Enter your password"
-            value={form.password}
-            onChange={e =>
-              setForm({ ...form, password: e.target.value })
-            }
-          />
-        </div>
+          {/* PASSWORD */}
+          <div className="mb-3">
+            <label className="form-label">Password</label>
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Enter your password"
+              value={form.password}
+              onChange={e =>
+                setForm({ ...form, password: e.target.value })
+              }
+            />
+          </div>
 
-        {/* ROLE */}
-        <div className="mb-4">
-          <label className="form-label">Login As</label>
-          <select
-            className="form-select"
-            value={form.role}
-            onChange={e =>
-              setForm({ ...form, role: e.target.value })
-            }
-          >
-            <option value="citizen">Citizen</option>
-            <option value="gram_panchayat">Gram Panchayat</option>
-            <option value="state_admin">State Admin</option>
-            <option value="doctor_admin">Doctor Admin</option>
-          </select>
-        </div>
+          {/* ROLE */}
+          <div className="mb-4">
+            <label className="form-label">Login As</label>
+            <select
+              className="form-select"
+              value={form.role}
+              onChange={e =>
+                setForm({ ...form, role: e.target.value })
+              }
+            >
+              <option value="citizen">Citizen</option>
+              <option value="gram_panchayat">Gram Panchayat</option>
+              <option value="state_admin">State Admin</option>
+              <option value="doctor_admin">Doctor Admin</option>
+            </select>
+          </div>
 
-        {/* SUBMIT */}
-        <div className="text-end">
-          <button
-            className="btn btn-apply px-4"
-            onClick={submit}
-            disabled={loading}
-          >
-            {loading ? (
-              <>
-                <span className="spinner-border spinner-border-sm me-2"></span>
-                Logging in...
-              </>
-            ) : (
-              "Login"
-            )}
-          </button>
-        </div>
+          {/* SUBMIT */}
+          <div className="text-end">
+            <button
+              type="submit"     // ✅ KEY LINE
+              className="btn btn-apply px-4"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2"></span>
+                  Logging in...
+                </>
+              ) : (
+                "Login"
+              )}
+            </button>
+          </div>
+        </form>
+        {/* ✅ FORM END */}
       </div>
     </div>
   );

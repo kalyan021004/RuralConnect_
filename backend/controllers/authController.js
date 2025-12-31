@@ -81,3 +81,80 @@ export const login = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+
+// GET PROFILE
+export const getProfile = async (req, res) => {
+  try {
+    // req.user is set by auth middleware
+    const user = await User.findById(req.user.id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(user);
+  } catch (err) {
+    console.error("GET PROFILE ERROR:", err.message);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+
+
+export const updateProfile = async (req, res) => {
+  try {
+    const user = req.user; // from auth middleware
+
+    const {
+      name,
+      phone,
+      village,
+      district,
+      state,
+      aadhaar,
+      dateOfBirth,
+      gender,
+      category,
+      profileImage
+    } = req.body;
+
+    // ✅ Required fields must not be empty
+    if (!name || !phone || !village || !district || !state) {
+      return res.status(400).json({
+        error: "Name, phone, village, district, and state are required"
+      });
+    }
+
+    user.name = name;
+    user.phone = phone;
+    user.village = village;
+    user.district = district;
+    user.state = state;
+
+    // Optional fields
+    if (aadhaar !== undefined) user.aadhaar = aadhaar;
+    if (dateOfBirth !== undefined) user.dateOfBirth = dateOfBirth;
+    if (gender !== undefined) user.gender = gender;
+    if (category !== undefined) user.category = category;
+    if (profileImage !== undefined) user.profileImage = profileImage;
+
+    await user.save();
+
+    res.json({
+      message: "Profile updated successfully",
+      user
+    });
+  } catch (err) {
+    console.error("UPDATE PROFILE ERROR:", err.message);
+
+    if (err.code === 11000) {
+      return res.status(400).json({
+        error: "Duplicate value (phone or aadhaar already exists)"
+      });
+    }
+
+    res.status(500).json({ error: "Server error" });
+  }
+};

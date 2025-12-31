@@ -22,6 +22,8 @@ import BookAppointment from "./pages/BookAppointment";
 import Doctor from "./pages/Doctor";
 import MyAppointments from "./pages/MyAppointments";
 import AppointmentDetail from "./pages/AppointmentDetail";
+import Profile from "./pages/Profile";
+import EditProfile from "./pages/EditProfile";
 export default function App() {
   return (
     <AuthProvider>
@@ -39,17 +41,29 @@ export default function App() {
           <Route path="/schemes/:id" element={<ProtectedRoute roles={["citizen"]}><SchemeDetail /></ProtectedRoute>} />
           <Route path="/applications/:id" element={<ProtectedRoute roles={["citizen", "state_admin"]}><ApplicationDetail /></ProtectedRoute>} />
           <Route path="/admin/applications"
-          element={
-            <ProtectedRoute roles={["state_admin"]}>
-              <AdminApplications />
-            </ProtectedRoute>
-          }
+            element={
+              <ProtectedRoute roles={["state_admin"]}>
+                <AdminApplications />
+              </ProtectedRoute>
+            }
           />
           {/* Grievances */}
           <Route path="/grievance/new" element={<ProtectedRoute roles={["citizen"]}><CreateGrievance /></ProtectedRoute>} />
           <Route path="/grievance/mine" element={<ProtectedRoute roles={["citizen"]}><MyGrievances /></ProtectedRoute>} />
           <Route path="/grievance/panchayat" element={<ProtectedRoute roles={["gram_panchayat"]}><PanchayatGrievances /></ProtectedRoute>} />
           <Route path="/grievances/:id" element={<ProtectedRoute roles={["citizen", "gram_panchayat"]}><GrievanceDetail /></ProtectedRoute>} />
+
+
+
+          {/*Profile Routes*/}
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/edit" element={<EditProfile />} />
+
+
+
+
+
+
 
           {/* Health */}
           <Route path="/health/doctors" element={<Doctor />} />
@@ -59,11 +73,11 @@ export default function App() {
           <Route path="/my-appointments" element={<ProtectedRoute roles={["citizen"]}><MyAppointments /></ProtectedRoute>} />
           <Route path="/appointments/:id" element={<ProtectedRoute roles={["citizen", "doctor_admin"]}><AppointmentDetail /></ProtectedRoute>} />
 
-          
+
           <Route path="/doctor/appointments" element={<ProtectedRoute roles={["doctor_admin"]}><DoctorAppointments /></ProtectedRoute>} />
           <Route path="/doctor/appointments/:id" element={<ProtectedRoute roles={["doctor_admin"]}><DoctorAppointmentDetail /></ProtectedRoute>} />
         </Routes>
-        
+
 
 
       </BrowserRouter>
