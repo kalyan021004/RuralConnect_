@@ -1,6 +1,10 @@
 import api from "./axios";
 
-/* Get all schemes */
+/* =========================
+   CITIZEN
+========================= */
+
+/* Get all schemes (citizen → only active) */
 export const fetchSchemes = () => {
   return api.get("/schemes");
 };
@@ -9,10 +13,25 @@ export const fetchSchemes = () => {
 export const getSchemeById = (id) => {
   return api.get(`/schemes/${id}`);
 };
+export const fetchAllSchemesAdmin = () => api.get("/schemes/admin/all");
+
+
+/* Check eligibility */
+export const checkEligibility = (schemeId) => {
+  return api.get(`/schemes/${schemeId}/eligibility`);
+};
 
 /* Apply for scheme */
-export const applyScheme = (schemeId) =>
-  api.post("/applications/apply", { schemeId });
+export const applyScheme = (schemeId) => {
+  return api.post("/applications/apply", { schemeId });
+};
 
 
-/*Eligibility fro schmes*/
+/* =========================
+   ADMIN
+========================= */
+
+/* Toggle scheme active / inactive */
+export const toggleSchemeStatus = (schemeId) => {
+  return api.put(`/schemes/${schemeId}/toggle`);
+};

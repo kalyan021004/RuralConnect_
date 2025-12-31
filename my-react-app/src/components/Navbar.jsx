@@ -1,6 +1,61 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+/* ==============================
+   PROFILE DROPDOWN (REUSABLE)
+============================== */
+function ProfileDropdown({ user, handleLogout }) {
+  return (
+    <div className="dropdown">
+      <span
+        className="nav-link dropdown-toggle d-flex align-items-center gap-2 text-white"
+        role="button"
+        data-bs-toggle="dropdown"
+      >
+        <span className="rounded-circle bg-light text-primary fw-bold px-2 py-1">
+          {user.name?.charAt(0).toUpperCase()}
+        </span>
+      </span>
+
+      <ul className="dropdown-menu dropdown-menu-end">
+        <li className="dropdown-item-text fw-semibold">
+          {user.name}
+          <br />
+          <small className="text-muted">{user.role}</small>
+        </li>
+
+        <li><hr className="dropdown-divider" /></li>
+
+        <li>
+          <Link className="dropdown-item" to="/profile">
+            My Profile
+          </Link>
+        </li>
+
+        <li>
+          <Link className="dropdown-item" to="/profile/edit">
+            Edit Profile
+          </Link>
+        </li>
+
+        <li><hr className="dropdown-divider" /></li>
+
+        <li>
+          <button
+            className="dropdown-item text-danger"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+        </li>
+      </ul>
+    </div>
+  );
+}
+
+/* ==============================
+   NAVBAR
+============================== */
 export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -11,29 +66,37 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
       <div className="container-fluid">
 
-        {/* LOGO */}
+        {/* LOGO — ALWAYS LEFT */}
         <Link className="navbar-brand fw-bold" to="/">
           🌾 DigitalConnect
         </Link>
 
-        {/* MOBILE TOGGLE */}
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#mainNavbar"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
+        {/* RIGHT SIDE (MOBILE): PROFILE + TOGGLER */}
+        <div className="d-flex align-items-center gap-2 d-lg-none">
+          {user && (
+            <ProfileDropdown
+              user={user}
+              handleLogout={handleLogout}
+            />
+          )}
+
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+        </div>
 
         {/* NAV LINKS */}
         <div className="collapse navbar-collapse" id="mainNavbar">
-          <ul className="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+          <ul className="navbar-nav ms-auto align-items-lg-center gap-lg-3">
 
-            {/* ================= PUBLIC ================= */}
             {!user && (
               <>
                 <li className="nav-item">
@@ -45,11 +108,10 @@ export default function Navbar() {
               </>
             )}
 
-            {/* ================= CITIZEN ================= */}
             {user?.role === "citizen" && (
               <>
                 <li className="nav-item dropdown">
-                  <span className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
+                  <span className="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                     Schemes
                   </span>
                   <ul className="dropdown-menu dropdown-menu-end">
@@ -59,7 +121,7 @@ export default function Navbar() {
                 </li>
 
                 <li className="nav-item dropdown">
-                  <span className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
+                  <span className="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                     Health Services
                   </span>
                   <ul className="dropdown-menu dropdown-menu-end">
@@ -69,7 +131,7 @@ export default function Navbar() {
                 </li>
 
                 <li className="nav-item dropdown">
-                  <span className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
+                  <span className="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                     Grievances
                   </span>
                   <ul className="dropdown-menu dropdown-menu-end">
@@ -80,67 +142,44 @@ export default function Navbar() {
               </>
             )}
 
-            {/* ================= STATE ADMIN ================= */}
             {user?.role === "state_admin" && (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/admin/applications">Applications</Link>
+                  <Link className="nav-link" to="/admin/applications">
+                    Applications
+                  </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/admin/schemes">Manage Schemes</Link>
+                  <Link className="nav-link" to="/admin/schemes">
+                    Manage Schemes
+                  </Link>
                 </li>
               </>
             )}
 
-            {/* ================= DOCTOR ADMIN ================= */}
             {user?.role === "doctor_admin" && (
               <li className="nav-item">
-                <Link className="nav-link" to="/doctor/appointments">Doctor Appointments</Link>
+                <Link className="nav-link" to="/doctor/appointments">
+                  Doctor Appointments
+                </Link>
               </li>
             )}
 
-            {/* ================= GRAM PANCHAYAT ================= */}
             {user?.role === "gram_panchayat" && (
               <li className="nav-item">
-                <Link className="nav-link" to="/grievance/panchayat">Grievances</Link>
+                <Link className="nav-link" to="/grievance/panchayat">
+                  Grievances
+                </Link>
               </li>
             )}
 
-            {/* ================= PROFILE ICON ================= */}
+            {/* PROFILE — DESKTOP ONLY (RIGHT EDGE) */}
             {user && (
-              <li className="nav-item dropdown ms-lg-3">
-                <span
-                  className="nav-link dropdown-toggle d-flex align-items-center gap-2"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                >
-                  <span className="rounded-circle bg-light text-primary fw-bold px-2 py-1">
-                    {user.name?.charAt(0).toUpperCase()}
-                  </span>
-                </span>
-
-                <ul className="dropdown-menu dropdown-menu-end">
-                  <li>
-                    <span className="dropdown-item-text fw-semibold">
-                      {user.name}
-                      <br />
-                      <small className="text-muted">{user.role}</small>
-                    </span>
-                  </li>
-                  <li><hr className="dropdown-divider" /></li>
-                  <li>
-                    <Link className="dropdown-item" to="/profile">My Profile</Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="/profile/edit">Edit Profile</Link>
-                  </li>
-                  <li><hr className="dropdown-divider" /></li>
-                  <li>
-                    <button className="dropdown-item text-danger" onClick={handleLogout}>
-                      Logout
-                    </button>
-                  </li>
-                </ul>
+              <li className="nav-item d-none d-lg-block">
+                <ProfileDropdown
+                  user={user}
+                  handleLogout={handleLogout}
+                />
               </li>
             )}
 

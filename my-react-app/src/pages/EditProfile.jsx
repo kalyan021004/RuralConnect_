@@ -66,9 +66,7 @@ export default function EditProfile() {
         dateOfBirth: form.dateOfBirth || null
       });
 
-      // 🔥 Update context instantly
       updateUser(res.data.user);
-
       navigate("/profile");
     } catch (err) {
       setError(err.response?.data?.error || "Update failed");
@@ -87,24 +85,93 @@ export default function EditProfile() {
         {error && <div className="alert alert-danger">{error}</div>}
 
         <form onSubmit={submit}>
-          <input className="form-control mb-3" name="name" value={form.name} onChange={handleChange} required />
-          <input className="form-control mb-3" value={form.email} disabled />
-          <input className="form-control mb-3" name="phone" value={form.phone} onChange={handleChange} required />
-          <input className="form-control mb-3" name="village" value={form.village} onChange={handleChange} required />
-          <input className="form-control mb-3" name="district" value={form.district} onChange={handleChange} required />
-          <input className="form-control mb-3" name="state" value={form.state} onChange={handleChange} required />
-          <input className="form-control mb-3" name="aadhaar" value={form.aadhaar} onChange={handleChange} />
+          <input
+            className="form-control mb-3"
+            name="name"
+            placeholder="Full Name"
+            value={form.name}
+            onChange={handleChange}
+            required
+          />
 
-          <input type="date" className="form-control mb-3" name="dateOfBirth" value={form.dateOfBirth} onChange={handleChange} />
+          <input
+            className="form-control mb-3"
+            value={form.email}
+            placeholder="Email"
+            disabled
+          />
 
-          <select className="form-select mb-3" name="gender" value={form.gender} onChange={handleChange}>
+          <input
+            className="form-control mb-3"
+            name="phone"
+            placeholder="Mobile Number"
+            value={form.phone}
+            onChange={handleChange}
+            required
+          />
+
+          <input
+            className="form-control mb-3"
+            name="village"
+            placeholder="Village / Town"
+            value={form.village}
+            onChange={handleChange}
+            required
+          />
+
+          <input
+            className="form-control mb-3"
+            name="district"
+            placeholder="District"
+            value={form.district}
+            onChange={handleChange}
+            required
+          />
+
+          <input
+            className="form-control mb-3"
+            name="state"
+            placeholder="State"
+            value={form.state}
+            onChange={handleChange}
+            required
+          />
+
+          <input
+            className="form-control mb-3"
+            name="aadhaar"
+            placeholder="Aadhaar Number (Optional)"
+            value={form.aadhaar}
+            onChange={handleChange}
+          />
+
+          <input
+            type="date"
+            className="form-control mb-3"
+            name="dateOfBirth"
+            placeholder="Date of Birth"
+            value={form.dateOfBirth}
+            onChange={handleChange}
+          />
+
+          <select
+            className="form-select mb-3"
+            name="gender"
+            value={form.gender}
+            onChange={handleChange}
+          >
             <option value="">Select Gender</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
             <option value="other">Other</option>
           </select>
 
-          <select className="form-select mb-3" name="category" value={form.category} onChange={handleChange}>
+          <select
+            className="form-select mb-3"
+            name="category"
+            value={form.category}
+            onChange={handleChange}
+          >
             <option value="">Select Category</option>
             <option value="general">General</option>
             <option value="obc">OBC</option>

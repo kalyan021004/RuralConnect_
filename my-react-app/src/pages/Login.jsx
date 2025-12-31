@@ -130,6 +130,16 @@ export default function Login() {
               )}
             </button>
           </div>
+          <div className="mt-3 text-center">
+            <small className="text-warning fw-semibold">
+              ⚠️ Note: Only officially authorized users can log in as
+              <br />
+              <strong>Gram Panchayat</strong>, <strong>State Admin</strong>, or <strong>Doctor Admin</strong>.
+              <br />
+            </small>
+          </div>
+
+
         </form>
         {/* ✅ FORM END */}
       </div>

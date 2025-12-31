@@ -2,16 +2,43 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchSchemes, applyScheme } from "../api/schemeApi";
 
+const CATEGORIES = [
+  "all",
+  "agriculture",
+  "education",
+  "health",
+  "housing",
+  "employment",
+  "social_welfare"
+];
+
 export default function CitizenSchemes() {
   const navigate = useNavigate();
+
   const [schemes, setSchemes] = useState([]);
+  const [filteredSchemes, setFilteredSchemes] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [loadingId, setLoadingId] = useState(null);
 
   useEffect(() => {
     fetchSchemes()
-      .then(res => setSchemes(res.data))
+      .then(res => {
+        setSchemes(res.data);
+        setFilteredSchemes(res.data);
+      })
       .catch(() => alert("Failed to load schemes"));
   }, []);
+
+  // 🔥 FILTER LOGIC
+  useEffect(() => {
+    if (selectedCategory === "all") {
+      setFilteredSchemes(schemes);
+    } else {
+      setFilteredSchemes(
+        schemes.filter(s => s.category === selectedCategory)
+      );
+    }
+  }, [selectedCategory, schemes]);
 
   const apply = async (schemeId, e) => {
     e.stopPropagation();
@@ -33,23 +60,40 @@ export default function CitizenSchemes() {
     <div className="container my-5">
 
       {/* PAGE HEADER */}
-      <div className="text-center mb-5">
+      <div className="text-center mb-4">
         <h2 className="page-title">Government Schemes</h2>
         <p className="page-subtitle">
           Browse and apply for active government welfare schemes
         </p>
       </div>
 
+      {/* 🔥 FILTER BAR */}
+      <div className="d-flex justify-content-end mb-4">
+        <select
+          className="form-select w-auto"
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          {CATEGORIES.map(cat => (
+            <option key={cat} value={cat}>
+              {cat === "all"
+                ? "All Categories"
+                : cat.replace("_", " ").toUpperCase()}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {/* EMPTY STATE */}
-      {schemes.length === 0 && (
+      {filteredSchemes.length === 0 && (
         <div className="alert text-center">
-          No schemes available at the moment.
+          No schemes available for this category.
         </div>
       )}
 
       {/* SCHEME LIST */}
       <div className="row g-4">
-        {schemes.map(scheme => (
+        {filteredSchemes.map(scheme => (
           <div className="col-md-6 col-lg-4" key={scheme._id}>
             <div
               className="card scheme-card h-100"
@@ -59,6 +103,10 @@ export default function CitizenSchemes() {
               <div className="card-body d-flex flex-column">
 
                 <h5 className="mb-2">{scheme.name}</h5>
+
+                <span className="badge bg-secondary mb-2 align-self-start">
+                  {scheme.category.replace("_", " ").toUpperCase()}
+                </span>
 
                 <p className="flex-grow-1">
                   {scheme.description.length > 120
@@ -76,7 +124,7 @@ export default function CitizenSchemes() {
                   >
                     {loadingId === scheme._id ? (
                       <>
-                        <span className="spinner-border spinner-border "></span>
+                        <span className="spinner-border spinner-border-sm me-1"></span>
                         Applying
                       </>
                     ) : (
@@ -90,6 +138,7 @@ export default function CitizenSchemes() {
           </div>
         ))}
       </div>
+
     </div>
   );
 }

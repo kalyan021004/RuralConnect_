@@ -24,6 +24,7 @@ import MyAppointments from "./pages/MyAppointments";
 import AppointmentDetail from "./pages/AppointmentDetail";
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
+import AdminManageSchemes from "./pages/AdminSchemes";
 export default function App() {
   return (
     <AuthProvider>
@@ -47,6 +48,15 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+           <Route
+          path="/admin/schemes"
+          element={
+            <ProtectedRoute role="state_admin">
+              <AdminManageSchemes />
+            </ProtectedRoute>
+          }
+        />
+
           {/* Grievances */}
           <Route path="/grievance/new" element={<ProtectedRoute roles={["citizen"]}><CreateGrievance /></ProtectedRoute>} />
           <Route path="/grievance/mine" element={<ProtectedRoute roles={["citizen"]}><MyGrievances /></ProtectedRoute>} />

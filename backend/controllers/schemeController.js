@@ -17,3 +17,27 @@ export const getSchemeById = async (req, res) => {
   res.json(scheme);
 };
 
+
+export const toggleSchemeStatus = async (req, res) => {
+  const scheme = await Scheme.findById(req.params.id);
+
+  if (!scheme) {
+    return res.status(404).json({ error: "Scheme not found" });
+  }
+
+  scheme.isActive = !scheme.isActive;
+  await scheme.save();
+
+  res.json({
+    message: "Scheme status updated",
+    isActive: scheme.isActive
+  });
+};
+// ADMIN – get all schemes (active + inactive)
+export const getAllSchemesAdmin = async (req, res) => {
+  const schemes = await Scheme.find().sort({ createdAt: -1 });
+  res.json(schemes);
+};
+
+
+
