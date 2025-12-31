@@ -7,49 +7,39 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ LOAD USER FROM BACKEND (NOT LOCALSTORAGE)
-  const loadUser = async () => {
-    try {
-      const res = await api.get("/auth/profile");
-      setUser(res.data); // FULL USER OBJECT
-    } catch (err) {
-      setUser(null);
-      localStorage.removeItem("token");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 🔁 On app load
+  // Load user from localStorage
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      loadUser();
-    } else {
-      setLoading(false);
-    }
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) setUser(JSON.parse(storedUser));
+    setLoading(false);
   }, []);
 
-  // 🔐 LOGIN
   const login = async (form) => {
     const res = await api.post("/auth/login", form);
     localStorage.setItem("token", res.data.token);
-    await loadUser(); // 🔥 fetch full profile immediately
+    localStorage.setItem("user", JSON.stringify(res.data.user));
+    setUser(res.data.user);
   };
 
-  // 📝 SIGNUP
   const signup = async (form) => {
     await api.post("/auth/register", form);
   };
 
-  // 🚪 LOGOUT
+  // 🔥 THIS FIXES YOUR PROBLEM
+  const updateUser = (updatedUser) => {
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+    setUser(updatedUser);
+  };
+
   const logout = () => {
-    localStorage.removeItem("token");
+    localStorage.clear();
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout, loading }}>
+    <AuthContext.Provider
+      value={{ user, login, signup, logout, updateUser, loading }}
+    >
       {!loading && children}
     </AuthContext.Provider>
   );

@@ -120,13 +120,14 @@ export const updateProfile = async (req, res) => {
       profileImage
     } = req.body;
 
-    // ✅ Required fields must not be empty
+    // Required fields
     if (!name || !phone || !village || !district || !state) {
       return res.status(400).json({
         error: "Name, phone, village, district, and state are required"
       });
     }
 
+    // Update required fields
     user.name = name;
     user.phone = phone;
     user.village = village;
@@ -134,18 +135,17 @@ export const updateProfile = async (req, res) => {
     user.state = state;
 
     // Optional fields
-    if (aadhaar !== undefined) user.aadhaar = aadhaar;
-    if (dateOfBirth !== undefined) user.dateOfBirth = dateOfBirth;
-    if (gender !== undefined) user.gender = gender;
-    if (category !== undefined) user.category = category;
-    if (profileImage !== undefined) user.profileImage = profileImage;
+    user.aadhaar = aadhaar || undefined;
+    user.dateOfBirth = dateOfBirth || undefined;
+    user.gender = gender || undefined;
+    user.category = category || undefined;
+    user.profileImage = profileImage || undefined;
 
     await user.save();
 
-    res.json({
-      message: "Profile updated successfully",
-      user
-    });
+    // 🔥 IMPORTANT: return updated user
+    res.json({ user });
+
   } catch (err) {
     console.error("UPDATE PROFILE ERROR:", err.message);
 
