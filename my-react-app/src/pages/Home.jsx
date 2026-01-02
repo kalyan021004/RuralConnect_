@@ -78,6 +78,80 @@ export default function Home() {
       </div>
     );
   }
+  /* ===============================
+   GRAM PANCHAYAT HOME
+================================ */
+if (user?.role === "gram_panchayat") {
+  return (
+    <div className="container my-5">
+
+      {/* HERO */}
+      <div className="card scheme-card p-5 shadow-lg mb-5">
+        <h1 className="mb-2">
+          Welcome, <span style={{ color: "#60a5fa" }}>Gram Panchayat</span>
+        </h1>
+        <p className="page-subtitle">
+          Review village grievances, take action, and ensure timely resolution.
+        </p>
+      </div>
+
+      {/* ACTION CARDS */}
+      <div className="row g-4">
+
+        <div className="col-md-6 col-lg-3">
+          <div
+            className="card scheme-card h-100 text-center p-4"
+            role="button"
+            onClick={() => navigate("/grievance/panchayat")}
+          >
+            <h4>📋 Grievances Dashboard</h4>
+            <p>View, review, resolve, and reject village grievances.</p>
+          </div>
+        </div>
+
+        <div className="col-md-6 col-lg-3">
+          <div
+            className="card scheme-card h-100 text-center p-4"
+            role="button"
+            onClick={() => navigate("/grievance/panchayat")}
+          >
+            <h4>📊 Analytics</h4>
+            <p>Track submitted, under review, and resolved grievances.</p>
+          </div>
+        </div>
+
+        <div className="col-md-6 col-lg-3">
+          <div
+            className="card scheme-card h-100 text-center p-4"
+            role="button"
+            onClick={() => navigate("/profile")}
+          >
+            <h4>👤 Panchayat Profile</h4>
+            <p>View and update Panchayat account details.</p>
+          </div>
+        </div>
+
+        <div className="col-md-6 col-lg-3">
+          <div
+            className="card scheme-card h-100 text-center p-4"
+            role="button"
+            onClick={() => navigate("/")}
+          >
+            <h4>🏡 Village Overview</h4>
+            <p>Centralized access to all village-level activities.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div className="text-center mt-5 page-subtitle">
+        Local governance dashboard for faster grievance resolution.
+      </div>
+
+    </div>
+  );
+}
+
 
   /* ===============================
      DEFAULT (CITIZEN) HOME
